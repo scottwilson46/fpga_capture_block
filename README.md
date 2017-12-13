@@ -53,6 +53,7 @@ for example:
     signal2 2
     signal3 16
 
+
     python capture.py --signals_file=signals --gen_wrapper
 
 this will generate a wrapper file called capture_wrapper with a module prototype:
@@ -105,4 +106,5 @@ You need to connect capture_rd_addr, capture_reset, capture_rd_data, capture_siz
     }
 
 once you have the captured data, you can create the vcd by doing:
+
     python capture.py --signals_file=signals --captured_data=capture_data.txt --vcd_name=op.vcd --process_data
