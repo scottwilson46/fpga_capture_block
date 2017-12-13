@@ -1,5 +1,5 @@
 # fpga_capture_block
-Poor mans signaltap/chipscope
+## Poor mans signaltap/chipscope
 
 So you put your design into the FPGA and it doesn't do what you expect it to do, what do you do next.  One option is to look at your design, find some
 signals that you think will help you to get to the bottom of the issue, mark them for debug, resynthesize and use Vivado to insert an ILA core for the
@@ -9,11 +9,11 @@ on:
 
 Usually FPGA debug requires a bit of inventiveness to try and catch the issue.  I tend to use it in a few different modes:
 
-1. capture the data on a bus (say for example capture a few metwork packets on the avalon bus):
+### 1. capture the data on a bus (say for example capture a few metwork packets on the avalon bus):
 
 just wire the capture_valid signal to the bus valid signal.
 
-2. capture until we have a trigger fired (this will give us some extra cycles after the trigger too):
+### 2. capture until we have a trigger fired (this will give us some extra cycles after the trigger too):
 
 ```
     parameter CYCLES_AFTER_TRIGGER = 100;
@@ -26,7 +26,7 @@ just wire the capture_valid signal to the bus valid signal.
                                cap_count + 'd1;
 ```    
 
-3. capture multiple times for n-cycles:
+### 3. capture multiple times for n-cycles:
 
 create a signal for starting capture and define a time for the capture:
 
@@ -53,6 +53,7 @@ for example:
     signal2 2
     signal3 16
 
+Then you can generate a wrapper file using:
 
     python capture.py --signals_file=signals --gen_wrapper
 
