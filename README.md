@@ -19,11 +19,20 @@ just wire the capture_valid signal to the bus valid signal.
     parameter CYCLES_AFTER_TRIGGER = 100;
     
     assign capture_valid     = cap_count == CYCLES_AFTER_TRIGGER ? 'd0 :
-                               cap_count;
+                               capture_valid_reg;
     assign next_cap_count    = cap_trigger                       ? 'd1 :
                                cap_count == CYCLES_AFTER_TRIGGER ? 'd0 :
                                cap_count == 'd0                  ? 'd0 :
                                cap_count + 'd1;
+                               
+    always @(posedge clk or posedge reset)
+      if (reset) begin
+        capture_valid_reg <= 1'b1;
+        cap_count         <= 'd0;
+      end else begin
+        capture_valid_reg <= capture_valid;
+        cap_count         <= next_cap_count;
+      end
 ```    
 
 ### 3. capture multiple times for n-cycles:
@@ -43,6 +52,16 @@ This code snippit will generate a capture of n-cycles everytime the trigger fire
                               cap_count == CAP_CYCLES ? 'd0  :
                               cap_count == 'd0        ? 'd0  :
                               cap_count + 'd1;
+                               
+    always @(posedge clk or posedge reset)
+      if (reset) begin
+        capture_valid_reg <= 1'b0;
+        cap_count         <= 'd0;
+      end else begin
+        capture_valid_reg <= capture_valid;
+        cap_count         <= next_cap_count;
+      end
+```    
     
 
 The script capture.py can be used to create a wrapper for your design and also can be used to generate the vcd file from the captured data.   First you need to create a signals file.  This contains a list of signal names you want to capture and the sizes of these signals:
